@@ -1,0 +1,12 @@
+# conda env create -f environment.yml
+# conda env update -f environment.yml
+
+name: video-search-python
+channels:
+  - conda-forge
+  - defaults
+
+dependencies:
+  - python=3.9.6
+  # Core scientific python
+  - flask
