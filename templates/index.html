@@ -16,17 +16,19 @@
                 <a href="#" class="btn btn-primary my-2">Main call to action</a>
                 <a href="#" class="btn btn-secondary my-2">Secondary action</a>
             </p>
-            <label for="customRange" id="result" class="form-label">Confidence level: <b></b></label>
-            <input type="range" class="form-range" min="1" max="100" id="customRange">
-            
-            <div class="input-group" >
-                <input type="text" class="form-control" aria-label="Text input with segmented dropdown button">
-                <div class="input-group-append">
-                    <button type="button" class="btn btn-primary">
-                        Search
-                    </button>
+            <form action="/search" method="POST">
+                <label for="customRange" id="result" class="form-label">Confidence level: <b></b></label>
+                <input type="range" class="form-range" min="1" max="100" id="customRange" name="range">
+                
+                <div class="input-group" >
+                    <input type="text" class="form-control" aria-label="Text input" name="needle">
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary">
+                            Search
+                        </button>
+                    </div>
                 </div>
-            </div>
+            </form>
         </div>
     </section>
 
