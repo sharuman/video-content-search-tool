@@ -11,3 +11,9 @@ dependencies:
   # Core scientific python
   - flask
   - mysql-connector-python
+  - click # For creating beautiful command line interfaces
+  - natsort
+  - opencv
+  - pandas
+  - tqdm
+  - scipy

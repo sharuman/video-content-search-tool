@@ -12,7 +12,7 @@ def home():
 def search():
     needle = request.args.get('needle')
     confidence = request.args.get('confidence')
-    print(needle, confidence)
+    
     with MySQLConnection() as mysql:
         cursor = mysql.connection.cursor()
 
