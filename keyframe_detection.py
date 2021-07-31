@@ -27,7 +27,7 @@ def parse_input(path):
     """If path does not point to a file, I will parse every video in the path"""
 
     input_path = r'/Users/bhuwan/Downloads/videos'
-    output_path = r'/Users/bhuwan/Downloads/videos/output'
+    output_path = r'static/keyframes'
     video_extensions = ("mp4", "mkv", "flv", "wmv", "avi", "mpg", "mpeg")
 
     with MySQLConnection() as mysql:
