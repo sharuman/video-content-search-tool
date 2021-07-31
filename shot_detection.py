@@ -3,7 +3,6 @@ import numpy as np
 import pandas as pd
 from scipy.spatial import distance
 import math
-import shutil
 import os
 
 class ShotDetection():
@@ -181,16 +180,17 @@ class ShotDetection():
             mid_point = math.floor((start_frame + end_frame) / 2)
             row = self.__images_dataframe.iloc[mid_point]
 
-            keyframe = row['frame']
-            keyframes.append((row['video_id'], row['video_path'], row['frame_id'], keyframe, shot))
+            keyframe = row['frame'].tobytes()
             
-            # keyframe_location = self.__output_path + '/' + row['video_id'] + '-keyframe-' + str(mid_point) + '-shot-' + str(i+1) + '.jpg'
+            keyframes.append((row['video_id'], row['video_path'], row['frame_id'], keyframe, shot, 'boo', 100))
+            
+            # keyframe_location = self.__output_path + '/' + row['video_id'] + '-keyframe-' + str(mid_point) + '-shot-' + str(shot) + '.jpg'
             # cv2.imwrite(keyframe_location, keyframe)
 
             shot+=1
 
         file1.close()
         
-        df = pd.DataFrame(keyframes, columns = ['video_id', 'video_path', 'frame_id', 'frame', 'shot'])
+        df = pd.DataFrame(keyframes, columns = ['video_id', 'video_path', 'keyframe_id', 'keyframe', 'shot', 'concept', 'confidence'])
         
         return df

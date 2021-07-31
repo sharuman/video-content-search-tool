@@ -14,7 +14,8 @@ class MySQLConnection:
                 self.cursor = self.connection.cursor()
                 self.cursor.execute("select database();")
                 record = self.cursor.fetchone()
-                print("You're connected to database: ", record)            
+                print("You're connected to database: ", record)
+                self.migrate()
 
         except Error as e:
             print("Error while connecting to MySQL", e)
@@ -30,9 +31,11 @@ class MySQLConnection:
             print("MySQL connection is closed")
 
     def migrate(self):
+        self.cursor.execute("DROP TABLE IF EXISTS keyframes;")
         self.cursor.execute("CREATE TABLE keyframes (id INT AUTO_INCREMENT PRIMARY KEY, \
                     video_id VARCHAR(255), video_path VARCHAR(255), keyframe_id VARCHAR(255), \
-                    keyframe_path VARCHAR(255), concept VARCHAR(255), confidence TINYINT)")
+                    keyframe LONGBLOB, concept VARCHAR(255), shot INT, \
+                    confidence TINYINT)")
 
         self.cursor.execute("CREATE INDEX index_concept ON keyframes (concept)")
         self.cursor.execute("CREATE INDEX index_confidence ON keyframes (confidence)")

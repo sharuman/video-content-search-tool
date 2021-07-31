@@ -5,6 +5,7 @@ import cv2
 import pandas as pd
 from tqdm import tqdm
 from shot_detection import ShotDetection
+from migrate import MySQLConnection
 
 @click.command()
 @click.option('--input', default='./videos/00492.mp4', required=True, show_default=True,
@@ -29,18 +30,24 @@ def parse_input(path):
     output_path = r'/Users/bhuwan/Downloads/videos/output'
     video_extensions = ("mp4", "mkv", "flv", "wmv", "avi", "mpg", "mpeg")
 
-
-    if not input_path.endswith(video_extensions):
-        for file in os_sorted(os.listdir(input_path)):
-            if file.endswith(video_extensions):
-                video_path = input_path + '/' + file
-                print('Extracting frames from ' + video_path)
-                df = extract_frames(file, video_path)
-                sd = ShotDetection(df, output_path)
-                keyframes_df = sd.get_keyframes()
-
-                # print(keyframes_df)
-                return
+    with MySQLConnection() as mysql:
+        conn = mysql.connection
+        if not input_path.endswith(video_extensions):
+            for file in os_sorted(os.listdir(input_path)):
+                if file.endswith(video_extensions):
+                    video_path = input_path + '/' + file
+                    print('Extracting frames from ' + video_path)
+                    df = extract_frames(file, video_path)
+                    sd = ShotDetection(df, output_path)
+                    keyframes_df = sd.get_keyframes()
+                    
+                    tuples = list(keyframes_df.itertuples(index=False, name=None))
+                    query = "INSERT INTO keyframes (video_id, video_path, keyframe_id, keyframe, shot, concept, confidence) \
+                        VALUES (%s, %s, %s, %s, %s, %s, %s)"
+                    val = tuples
+                    mysql.cursor.executemany(query, val)
+                    mysql.connection.commit()
+                    return
 
 def extract_frames(video_id, video_path) -> pd.DataFrame:
     cap = cv2.VideoCapture(video_path)
