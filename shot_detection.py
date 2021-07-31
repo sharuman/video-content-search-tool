@@ -4,6 +4,9 @@ import pandas as pd
 from scipy.spatial import distance
 import math
 import os
+from tensorflow.keras.preprocessing import image as kerasImage
+import tensorflow.keras.applications.vgg16 as vgg16
+from PIL import Image
 
 class ShotDetection():
     """Shot Boundary Detection using Twin-comparison Algorithm."""
@@ -185,7 +188,9 @@ class ShotDetection():
             keyframe_path = self.__output_path + '/' + row['video_id'] + '-keyframe-' + str(mid_point) + '-shot-' + str(shot) + '.jpg'
             cv2.imwrite(keyframe_path, keyframe)
 
-            keyframes.append((row['video_id'], row['video_path'], row['frame_id'], keyframe_path, shot, 'boo', 100))
+            concept, confidence = self.__funcVGG16(keyframe)
+
+            keyframes.append((row['video_id'], row['video_path'], row['frame_id'], keyframe_path, shot, concept, confidence))
 
             shot+=1
 
@@ -194,3 +199,16 @@ class ShotDetection():
         df = pd.DataFrame(keyframes, columns = ['video_id', 'video_path', 'keyframe_id', 'keyframe_path', 'shot', 'concept', 'confidence'])
         
         return df
+
+    def __funcVGG16(self, img):
+        model = vgg16.VGG16(weights='imagenet')
+        
+        x = cv2.resize(img, dsize=(224, 224), interpolation=cv2.INTER_AREA)
+        x = np.expand_dims(x, axis=0)
+        x = vgg16.preprocess_input(x)
+
+        preds = model.predict(x)
+        
+        _, label, probability = vgg16.decode_predictions(preds, top=3)[0][0]
+        
+        return (label, round(probability, 2) * 100)
