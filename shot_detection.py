@@ -180,17 +180,17 @@ class ShotDetection():
             mid_point = math.floor((start_frame + end_frame) / 2)
             row = self.__images_dataframe.iloc[mid_point]
 
-            keyframe = row['frame'].tobytes()
+            keyframe = row['frame']
             
-            keyframes.append((row['video_id'], row['video_path'], row['frame_id'], keyframe, shot, 'boo', 100))
-            
-            # keyframe_location = self.__output_path + '/' + row['video_id'] + '-keyframe-' + str(mid_point) + '-shot-' + str(shot) + '.jpg'
-            # cv2.imwrite(keyframe_location, keyframe)
+            keyframe_path = self.__output_path + '/' + row['video_id'] + '-keyframe-' + str(mid_point) + '-shot-' + str(shot) + '.jpg'
+            cv2.imwrite(keyframe_path, keyframe)
+
+            keyframes.append((row['video_id'], row['video_path'], row['frame_id'], keyframe_path, shot, 'boo', 100))
 
             shot+=1
 
         file1.close()
         
-        df = pd.DataFrame(keyframes, columns = ['video_id', 'video_path', 'keyframe_id', 'keyframe', 'shot', 'concept', 'confidence'])
+        df = pd.DataFrame(keyframes, columns = ['video_id', 'video_path', 'keyframe_id', 'keyframe_path', 'shot', 'concept', 'confidence'])
         
         return df

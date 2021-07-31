@@ -34,7 +34,7 @@ class MySQLConnection:
         self.cursor.execute("DROP TABLE IF EXISTS keyframes;")
         self.cursor.execute("CREATE TABLE keyframes (id INT AUTO_INCREMENT PRIMARY KEY, \
                     video_id VARCHAR(255), video_path VARCHAR(255), keyframe_id VARCHAR(255), \
-                    keyframe LONGBLOB, concept VARCHAR(255), shot INT, \
+                    keyframe_path VARCHAR(255), concept VARCHAR(255), shot INT, \
                     confidence TINYINT)")
 
         self.cursor.execute("CREATE INDEX index_concept ON keyframes (concept)")

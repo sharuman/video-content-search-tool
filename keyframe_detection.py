@@ -42,7 +42,7 @@ def parse_input(path):
                     keyframes_df = sd.get_keyframes()
                     
                     tuples = list(keyframes_df.itertuples(index=False, name=None))
-                    query = "INSERT INTO keyframes (video_id, video_path, keyframe_id, keyframe, shot, concept, confidence) \
+                    query = "INSERT INTO keyframes (video_id, video_path, keyframe_id, keyframe_path, shot, concept, confidence) \
                         VALUES (%s, %s, %s, %s, %s, %s, %s)"
                     val = tuples
                     mysql.cursor.executemany(query, val)
