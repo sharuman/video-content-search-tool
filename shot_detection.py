@@ -201,9 +201,25 @@ class ShotDetection():
         return df
 
     def __funcVGG16(self, img):
+        """VGG16 Convolutional Neural Network for image recognition.
+
+        Args:
+            img (numpy array):  numpy array representing an image (in BGR) on
+            which we want to do image recognition. 
+
+
+        Returns:
+            tuple:  tuple of label (concept) and probability (integer).
+            The label with the highest probability is returned.
+        """
         model = vgg16.VGG16(weights='imagenet')
         
-        x = cv2.resize(img, dsize=(224, 224), interpolation=cv2.INTER_AREA)
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        # LANCZOS is a high quality filter for both downscaling and upscaling images.
+        # @see  https://pillow.readthedocs.io/en/stable/handbook/concepts.html#PIL.Image.LANCZOS
+        img = Image.fromarray(img).resize((224, 224), Image.LANCZOS)
+        x = kerasImage.img_to_array(img)
+
         x = np.expand_dims(x, axis=0)
         x = vgg16.preprocess_input(x)
 
