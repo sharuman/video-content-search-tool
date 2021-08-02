@@ -3,7 +3,7 @@ from mysql.connector import Error
 
 class MySQLConnection:
 
-    def __init__(self):
+    def __init__(self, reset):
         try:
             self.connection = None
             self.connection = mysql.connector.connect(host='localhost',
@@ -15,7 +15,8 @@ class MySQLConnection:
                 self.cursor.execute("select database();")
                 record = self.cursor.fetchone()
                 print("You're connected to database: ", record)
-                # self.migrate()
+                if reset:
+                    self.migrate()
 
         except Error as e:
             print("Error while connecting to MySQL", e)

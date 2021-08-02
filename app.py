@@ -13,7 +13,7 @@ def search():
     needle = request.args.get('needle')
     confidence = request.args.get('confidence')
     
-    with MySQLConnection() as mysql:
+    with MySQLConnection(False) as mysql:
         cursor = mysql.connection.cursor()
 
         cursor.execute("SELECT * FROM keyframes \

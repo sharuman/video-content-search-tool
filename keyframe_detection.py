@@ -14,23 +14,22 @@ from migrate import MySQLConnection
 @click.option('--port', default=3306, help='MySQL server port.')
 @click.option('--user', default='', help='MySQL server user.')
 @click.option('--password', default='', help='MySQL server password.')
+@click.option('--reset/--no-reset', default=False)
 
-def hello(input, host, port, user, password):
+def hello(input, host, port, user, password, reset):
     """Find keyframes in a video, do object detection, and save results in a MySQL database."""
     
-    click.echo(input)
-    
-    parse_input(input)
+    parse_input(input, reset)
 
 
-def parse_input(path):
+def parse_input(path, reset):
     """If path does not point to a file, I will parse every video in the path"""
 
     input_path = r'/Users/bhuwan/Downloads/videos'
     output_path = r'static/keyframes'
     video_extensions = ("mp4", "mkv", "flv", "wmv", "avi", "mpg", "mpeg")
 
-    with MySQLConnection() as mysql:
+    with MySQLConnection(reset) as mysql:
         conn = mysql.connection
         if not input_path.endswith(video_extensions):
             for file in os_sorted(os.listdir(input_path)):
