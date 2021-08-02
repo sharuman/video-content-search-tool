@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from migrate import MySQLConnection
+from database import MySQLConnection
 
 app = Flask(__name__)
 

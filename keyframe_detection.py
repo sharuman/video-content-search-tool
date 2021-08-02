@@ -5,7 +5,7 @@ import cv2
 import pandas as pd
 from tqdm import tqdm
 from shot_detection import ShotDetection
-from migrate import MySQLConnection
+from database import MySQLConnection
 
 @click.command()
 @click.option('--input', default='./videos/00492.mp4', required=True, show_default=True,
