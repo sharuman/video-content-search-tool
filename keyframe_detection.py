@@ -16,25 +16,21 @@ from database import MySQLConnection
 @click.option('--password', default='', help='MySQL server password.')
 @click.option('--reset/--no-reset', default=False)
 
-def hello(input, host, port, user, password, reset):
-    """Find keyframes in a video, do object detection, and save results in a MySQL database."""
+def parse_input(input, host, port, user, password, reset):
+    """Find keyframes in a video, do object detection, and save results in a MySQL database.
     
-    parse_input(input, reset)
-
-
-def parse_input(path, reset):
-    """If path does not point to a file, I will parse every video in the path"""
-
-    input_path = r'/Users/bhuwan/Downloads/videos'
+    If path does not point to a file, I will parse every video in the path
+    """
+    
     output_path = r'static/keyframes'
     video_extensions = ("mp4", "mkv", "flv", "wmv", "avi", "mpg", "mpeg")
 
     with MySQLConnection(reset) as mysql:
         conn = mysql.connection
-        if not input_path.endswith(video_extensions):
-            for file in os_sorted(os.listdir(input_path)):
+        if not input.endswith(video_extensions):
+            for file in os_sorted(os.listdir(input)):
                 if file.endswith(video_extensions):
-                    video_path = input_path + '/' + file
+                    video_path = input + '/' + file
                     print('Extracting frames from ' + video_path)
                     df = extract_frames(file, video_path)
                     sd = ShotDetection(df, output_path)
@@ -43,12 +39,19 @@ def parse_input(path, reset):
                     tuples = list(keyframes_df.itertuples(index=False, name=None))
                     query = "INSERT INTO keyframes (video_id, video_path, keyframe_id, keyframe_path, shot, concept, confidence) \
                         VALUES (%s, %s, %s, %s, %s, %s, %s)"
-                    val = tuples
-                    mysql.cursor.executemany(query, val)
+                    mysql.cursor.executemany(query, tuples)
                     mysql.connection.commit()
-                    return
 
 def extract_frames(video_id, video_path) -> pd.DataFrame:
+    """Frames of the input video are extracted using openCV library.
+
+    Args:
+        video_id (string):  file name of the video.
+        video_path (string): path to the video.
+    Returns:
+        pd.DataFrame:  a dataframe having all the relevant information of the video.
+    """
+
     cap = cv2.VideoCapture(video_path)
     fps = cap.get(cv2.CAP_PROP_FPS)
     tot_frames = cap.get(cv2.CAP_PROP_FRAME_COUNT)
@@ -77,7 +80,5 @@ def extract_frames(video_id, video_path) -> pd.DataFrame:
 
     return df
 
-
-
 if __name__ == '__main__':
-    hello()
+    parse_input()

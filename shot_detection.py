@@ -31,6 +31,7 @@ class ShotDetection():
         Returns:
             list:  a list of histograms for each frame present in the dataframe.
         """
+
         histograms = []
 
         for index, row in self.__images_dataframe.iterrows():
@@ -65,6 +66,7 @@ class ShotDetection():
             list:  a list containing the shots boundary where each element is a tuple
             (start_boundary_frame_id, end_boundary_frame_id).
         """
+
         shots = []
         count_shots = 1
         
@@ -112,6 +114,7 @@ class ShotDetection():
         Returns:
             float:  higher threshold.
         """
+
         higherThresh_calc = np.max(diff_list)/2
 
         if higherThresh_calc > np.average(diff_list):
@@ -133,6 +136,7 @@ class ShotDetection():
         Returns:
             float:  lower threshold.
         """
+
         lowerThresh_calc = np.average(diff_list) + 2*(np.std(diff_list))
         print("Lower threshold: ", lowerThresh_calc)
 
@@ -147,6 +151,7 @@ class ShotDetection():
         Returns:
             tuple:  higher and lower thresholds.
         """
+
         frames_distances = []
         
         for i in range(len(hist_list)):
@@ -168,17 +173,18 @@ class ShotDetection():
         Returns:
             list:  a list of keyframes (images) as numpy arrays.
         """
+
         histograms = self.__get_histograms()
         thresholdHigh, thresholdLow = self.__getThresholds(histograms)
         shots = self.__twin_comparison(histograms, thresholdHigh, thresholdLow)
 
         os.makedirs(os.path.dirname(self.__output_path + '/'), exist_ok=True)
-        file1 = open(self.__output_path + '/shots.txt', 'w') 
+        # file1 = open(self.__output_path + '/shots.txt', 'w') 
 
         shot = 0
         keyframes = []
         for start_frame, end_frame in shots:
-            file1.write(str(start_frame) + '-' + str(end_frame) + ' (Shot ' + str(shot) + ')\n')
+            # file1.write(str(start_frame) + '-' + str(end_frame) + ' (Shot ' + str(shot) + ')\n')
 
             mid_point = math.floor((start_frame + end_frame) / 2)
             row = self.__images_dataframe.iloc[mid_point]
@@ -194,7 +200,7 @@ class ShotDetection():
 
             shot+=1
 
-        file1.close()
+        # file1.close()
         
         df = pd.DataFrame(keyframes, columns = ['video_id', 'video_path', 'keyframe_id', 'keyframe_path', 'shot', 'concept', 'confidence'])
         
@@ -212,6 +218,7 @@ class ShotDetection():
             tuple:  tuple of label (concept) and probability (integer).
             The label with the highest probability is returned.
         """
+        
         model = vgg16.VGG16(weights='imagenet')
         
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
