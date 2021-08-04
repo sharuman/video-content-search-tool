@@ -4,9 +4,13 @@ import pandas as pd
 from scipy.spatial import distance
 import math
 import os
+# Place this before directly or indirectly importing tensorflow
+import logging
+logging.getLogger("tensorflow").setLevel(logging.ERROR)
 from tensorflow.keras.preprocessing import image as kerasImage
 import tensorflow.keras.applications.vgg16 as vgg16
 from PIL import Image
+from tqdm import tqdm
 
 class ShotDetection():
     """Shot Boundary Detection using Twin-comparison Algorithm."""
@@ -183,7 +187,7 @@ class ShotDetection():
 
         shot = 0
         keyframes = []
-        for start_frame, end_frame in shots:
+        for start_frame, end_frame in tqdm(shots):
             # file1.write(str(start_frame) + '-' + str(end_frame) + ' (Shot ' + str(shot) + ')\n')
 
             mid_point = math.floor((start_frame + end_frame) / 2)
