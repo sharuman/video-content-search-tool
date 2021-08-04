@@ -8,19 +8,19 @@ from shot_detection import ShotDetection
 from database import MySQLConnection
 
 @click.command()
-@click.option('--input', default='./videos/00492.mp4', required=True, show_default=True,
+@click.option('--input', required=True, show_default=True,
     help='Path to video. If not set to file, all videos in the path will be used.')
 @click.option('--host', default='127.0.0.1', help='MySQL server hostname.')
 @click.option('--port', default=3306, help='MySQL server port.')
-@click.option('--user', default='', help='MySQL server user.')
+@click.option('--user', default='root', help='MySQL server user.')
 @click.option('--password', default='', help='MySQL server password.')
 @click.option('--database', default='video_search', help='MySQL database name.')
-@click.option('--reset/--no-reset', default=False)
+@click.option('--reset/--no-reset', default=False, help='Drops and recreates the keyframes table.')
 
 def parse_input(input, host, port, user, password, database, reset):
     """Find keyframes in a video, do object detection, and save results in a MySQL database.
     
-    If path does not point to a file, I will parse every video in the path
+    If path does not point to a file, I will parse every video in the path.
     """
     
     output_path = r'static/keyframes'
@@ -34,6 +34,7 @@ def parse_input(input, host, port, user, password, database, reset):
                     video_path = input + '/' + file
                     print('Extracting frames from ' + video_path)
                     df = extract_frames(file, video_path)
+                    print('Finding shots and extracting concepts from keyframes')
                     sd = ShotDetection(df, output_path)
                     keyframes_df = sd.get_keyframes()
                     
