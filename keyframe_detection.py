@@ -10,14 +10,9 @@ from database import MySQLConnection
 @click.command()
 @click.option('--input', required=True, show_default=True,
     help='Path to video. If not set to file, all videos in the path will be used.')
-@click.option('--host', default='127.0.0.1', help='MySQL server hostname.')
-@click.option('--port', default=3306, help='MySQL server port.')
-@click.option('--user', default='root', help='MySQL server user.')
-@click.option('--password', default='', help='MySQL server password.')
-@click.option('--database', default='video_search', help='MySQL database name.')
 @click.option('--reset/--no-reset', default=False, help='Drops and recreates the keyframes table.')
 
-def parse_input(input, host, port, user, password, database, reset):
+def parse_input(input, reset):
     """Find keyframes in a video, do object detection, and save results in a MySQL database.
     
     If path does not point to a file, I will parse every video in the path.
@@ -26,7 +21,7 @@ def parse_input(input, host, port, user, password, database, reset):
     output_path = r'static/keyframes'
     video_extensions = ("mp4", "mkv", "flv", "wmv", "avi", "mpg", "mpeg")
 
-    with MySQLConnection(host, port, user, password, database, reset) as mysql:
+    with MySQLConnection(reset) as mysql:
         conn = mysql.connection
         if not input.endswith(video_extensions):
             for file in os_sorted(os.listdir(input)):

@@ -1,10 +1,18 @@
 import  mysql.connector
 from mysql.connector import Error
+import settings
+import os
 
 class MySQLConnection:
 
-    def __init__(self, host, port, user, password, database, reset):
+    def __init__(self, reset):
         try:
+            host = os.getenv('DB_HOST')
+            port = os.getenv('DB_PORT')
+            user = os.getenv('DB_USER')
+            password = os.getenv('DB_PASSWORD')
+            database = os.getenv('DB_DATABASE')
+
             self.connection = None
             self.connection = mysql.connector.connect(host=host, port=port, user=user,
                                                 password=password)

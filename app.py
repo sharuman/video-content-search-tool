@@ -1,11 +1,14 @@
 from flask import Flask, render_template, request
 from database import MySQLConnection
+import settings
+import os
 
 app = Flask(__name__)
+os.environ['FLASK_ENV'] = os.getenv('APP_ENV')
 
 @app.route("/") 
 def home(): 
-    data = "VideoSearch"
+    data = os.getenv('APP_NAME')
     return render_template('index.html', data = data)
 
 @app.route("/search", methods = ['GET'])
@@ -24,4 +27,4 @@ def search():
 
     return render_template('result.html', data = result)
 
-app.run(debug = True)
+app.run(host = os.getenv('APP_HOST'), port = os.getenv('APP_PORT'), debug = os.getenv('APP_DEBUG'))

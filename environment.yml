@@ -15,4 +15,5 @@ dependencies:
   - scipy
   - tensorflow
   - pillow
+  - python-dotenv
   
