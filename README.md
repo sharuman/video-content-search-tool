@@ -1,5 +1,5 @@
 # Video Content Search Tool
-This project let you search concepts in a video via a web interface. If first detects the shots by using the Twin Comparison Algorithm. Then, the frame in the middle of each shot is choosen as keyframe. Afterwards, each keyframe is feeded to the VGG16 CNN to extract the concepts (for each keyframe we extract the concept with the highest confidence). In the end, the resutls are persisted in a MySQL database so that they can be browsed by the user using the web-based UI.
+This project lets you search concepts in a video via a web interface. If first detects the shots by using the Twin Comparison Algorithm. Then, the frame in the middle of each shot is chosen as keyframe. Afterwards, each keyframe is feeded to the VGG16 CNN to extract the concepts (for each keyframe we extract the concept with the highest confidence). In the end, the resutls are persisted in a MySQL database so that they can be browsed by the user using the web-based UI.
 
 ## Setup
 The following setup has been tested on MBP running macOS Catalina using the V3C1 dataset.
